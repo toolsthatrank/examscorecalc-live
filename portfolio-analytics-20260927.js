@@ -43,6 +43,39 @@
   }
   window.portfolioAnalytics = { event };
 
+  // CTA ids. A click on [data-cta] sends cta_click. A same-site click is handed to the next page in
+  // sessionStorage, because gtag can lose an event when the page navigates.
+  const CTA_KEY = 'esc_cta_handoff_v1';
+  function ctaEvent(p) {
+    if (!loaded || typeof window.gtag !== 'function') return false;
+    window.gtag('event', 'cta_click', Object.assign({ site_id: location.hostname.replace(/^www\./, ''),
+      event_schema_version: '1', qa: 'false', transport_type: 'beacon' }, p));
+    return true;
+  }
+  document.addEventListener('click', ev => {
+    const el = ev.target && ev.target.closest ? ev.target.closest('[data-cta]') : null;
+    const id = el && el.getAttribute('data-cta');
+    if (!id || !/^[a-z0-9_]{1,40}$/.test(id)) return;
+    const p = { cta_id: id, placement: id.split('_')[0], page_path: location.pathname };
+    try {
+      const u = new URL(el.href, location.href);
+      const newTab = el.target === '_blank' || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button === 1;
+      if (u.origin === location.origin && !newTab && u.pathname !== location.pathname) {
+        sessionStorage.setItem(CTA_KEY, JSON.stringify(p));
+        return;
+      }
+    } catch (_) {}
+    ctaEvent(p);
+  }, true);
+  function flushCta() {
+    try {
+      const held = JSON.parse(sessionStorage.getItem(CTA_KEY) || 'null');
+      if (!held || !/^[a-z0-9_]{1,40}$/.test(held.cta_id || '')) return;
+      if (ctaEvent({ cta_id: held.cta_id, placement: String(held.placement || '').slice(0, 40),
+        page_path: String(held.page_path || '').slice(0, 100), handoff: 1 })) sessionStorage.removeItem(CTA_KEY);
+    } catch (_) {}
+  }
+
   function load() {
     if (suppressed || loaded) return;
     loaded = true;
@@ -71,6 +104,7 @@
     tag.async = true;
     tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
     document.head.appendChild(tag);
+    flushCta();
     observeOffer();
   }
 
