@@ -24,3 +24,7 @@ html{scroll-padding-top:120px}
 
 .checkout-status{font-size:13px;line-height:1.5;max-width:34ch;margin:10px 0 0;color:var(--muted,#526675)}
 .checkout-form button:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+/* R2 2026-11-06 48 px tap target for the header buy link */
+.nav-buy{min-height:48px;display:inline-flex;align-items:center}
+@media(max-width:600px){.hero h1{font-size:46px;line-height:1}.hero h1 br{display:none}.hero-lead{margin-top:12px}}
