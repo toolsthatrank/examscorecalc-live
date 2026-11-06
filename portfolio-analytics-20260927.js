@@ -59,6 +59,7 @@
     if (!id || !/^[a-z0-9_]{1,40}$/.test(id)) return;
     const p = { cta_id: id, placement: id.split('_')[0], page_path: location.pathname };
     try {
+      if (el.tagName !== 'A' || !el.href) throw new Error('not a link'); // buttons send at once
       const u = new URL(el.href, location.href);
       const newTab = el.target === '_blank' || ev.metaKey || ev.ctrlKey || ev.shiftKey || ev.button === 1;
       if (u.origin === location.origin && !newTab && u.pathname !== location.pathname) {
@@ -131,7 +132,7 @@
     const box = document.createElement('aside');
     box.id = 'portfolio-analytics-choice';
     box.setAttribute('aria-label', 'Analytics choice');
-    box.style.cssText = 'position:fixed;z-index:2147483646;bottom:12px;left:12px;right:12px;max-width:540px;padding:14px 16px;border:1px solid #bbb;border-radius:10px;background:#fff;color:#17212b;box-shadow:0 5px 25px #0003;font:14px/1.5 system-ui,sans-serif';
+    box.style.cssText = 'position:fixed;z-index:2147483646;bottom:8px;left:8px;right:8px;max-width:540px;padding:8px 12px;border:1px solid #bbb;border-radius:10px;background:#fff;color:#17212b;box-shadow:0 5px 25px #0003;font:13px/1.4 system-ui,sans-serif';
     const copy = document.createElement('span');
     copy.textContent = 'Optional analytics help us see which calculators and offers work. We never send your calculator inputs.';
     const link = document.createElement('a');
@@ -139,7 +140,7 @@
     link.textContent = ' Privacy details';
     link.style.cssText = 'color:#185b68;text-decoration:underline';
     const actions = document.createElement('div');
-    actions.style.cssText = 'display:flex;gap:8px;margin-top:9px';
+    actions.style.cssText = 'display:flex;gap:8px;margin-top:6px';
     for (const [label, value] of [['Allow analytics', 'yes'], ['Decline', 'no']]) {
       const button = document.createElement('button');
       button.type = 'button';
