@@ -32,3 +32,5 @@ html{scroll-padding-top:120px}
 /* R2 focus ring and code wrap */
 a[data-cta]:focus-visible,button[data-cta]:focus-visible{outline:3px solid #0b3b33;outline-offset:2px}
 code{overflow-wrap:anywhere;word-break:break-word;white-space:normal}
+/* R3 targets */
+.purchase-note a{display:inline-flex;align-items:center;min-height:48px;padding:0 4px;font-weight:600;color:#1d6559}.demo-choices .button{min-height:48px}.footer-links a{display:inline-flex;align-items:center;min-height:48px}

@@ -191,6 +191,15 @@
         if (form && !form.querySelector('button[type="submit"]:disabled')) {
           const now = Date.now();
           if (now - lastCheckout > 1000) { event('begin_checkout', 'offer_page'); lastCheckout = now; }
+          // Hold the hand-over to checkout until gtag has sent the queued events (max 1.2 s), so a fast click is counted.
+          if (loaded && form.dataset.gaHeld !== '1' && !e.defaultPrevented) {
+            e.preventDefault();
+            form.dataset.gaHeld = '1';
+            let sent = false;
+            const go = () => { if (sent) return; sent = true; HTMLFormElement.prototype.submit.call(form); };
+            window.gtag('event', 'checkout_handoff', { event_callback: go, event_timeout: 1200, transport_type: 'beacon', qa: isQa ? 'true' : 'false' });
+            setTimeout(go, 1300);
+          }
         }
       }, true);
       document.addEventListener('click', e => {
