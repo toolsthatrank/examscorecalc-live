@@ -28,3 +28,7 @@ html{scroll-padding-top:120px}
 /* R2 2026-11-06 48 px tap target for the header buy link */
 .nav-buy{min-height:48px;display:inline-flex;align-items:center}
 @media(max-width:600px){.hero h1{font-size:46px;line-height:1}.hero h1 br{display:none}.hero-lead{margin-top:12px}}
+
+/* R2 focus ring and code wrap */
+a[data-cta]:focus-visible,button[data-cta]:focus-visible{outline:3px solid #0b3b33;outline-offset:2px}
+code{overflow-wrap:anywhere;word-break:break-word;white-space:normal}
